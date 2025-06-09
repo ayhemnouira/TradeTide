@@ -4,21 +4,37 @@ import com.example.TradeTide.domain.VerificationType;
 import com.example.TradeTide.model.ForgotPasswordToken;
 import com.example.TradeTide.model.User;
 import com.example.TradeTide.repo.ForgotPasswordRepo;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
+    @Autowired
     private  ForgotPasswordRepo forgotPasswordRepo;
 
     @Override
+    @Transactional
     public ForgotPasswordToken createToken(User user, String id, String otp, VerificationType verificationType, String sendTo) {
-        ForgotPasswordToken token = new ForgotPasswordToken();
-        token.setUser(user);
-        token.setOtp(otp);
-        token.setVerificationType(verificationType);
-        token.setSendTo(sendTo);
-        token.setId(id);
+        ForgotPasswordToken token = forgotPasswordRepo.findByUserId(user.getId());
+        if (token != null) {
+            // Update existing token
+            token.setOtp(otp);
+            token.setVerificationType(verificationType);
+            token.setSendTo(sendTo);
+        } else {
+            // Create new token
+            token = new ForgotPasswordToken();
+            token.setUser(user);
+            token.setOtp(otp);
+            token.setVerificationType(verificationType);
+            token.setSendTo(sendTo);
+            token.setId(id);
+        }
         return forgotPasswordRepo.save(token);
     }
 

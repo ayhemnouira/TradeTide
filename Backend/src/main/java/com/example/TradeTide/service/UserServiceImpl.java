@@ -5,6 +5,7 @@ import com.example.TradeTide.model.TwoFactorAuth;
 import com.example.TradeTide.model.User;
 import com.example.TradeTide.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private JWTService jwtService;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     @Override
     public User findUserByJwt(String jwt) throws Exception {
         String email = jwtService.extractEmail(jwt);
@@ -56,8 +58,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User updatePassword(User user, String newPassword) {
-        user.setPassword(newPassword);
-
+        user.setPassword(encoder.encode(newPassword));
         return userRepo.save(user);
     }
 }

@@ -6,9 +6,11 @@ import com.example.TradeTide.model.VerificationCode;
 import com.example.TradeTide.repo.VerificationCodeRepo;
 import com.example.TradeTide.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class VerificationCodeServiceImpl implements VerificationCodeService{
     @Autowired
     private VerificationCodeRepo verificationCodeRepo;
