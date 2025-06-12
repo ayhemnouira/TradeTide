@@ -1,0 +1,143 @@
+<div
+  @fadeIn
+  class="max-w-md w-full bg-gray-900/40 backdrop-filter backdrop-blur-3xl rounded-3xl shadow-2xl overflow-hidden border border-green-500/20 relative"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-tr from-green-600/10 via-emerald-500/10 to-teal-600/10 opacity-70 z-0"
+  ></div>
+  <div class="p-12 relative z-10">
+    <h2
+      class="text-4xl font-extrabold mb-10 text-center bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(0,255,128,0.3)]"
+    >
+      Create Account
+    </h2>
+
+    <form
+      (ngSubmit)="handleSignUp()"
+      #signupForm="ngForm"
+      class="flex flex-col space-y-4"
+    >
+      <!-- Full Name -->
+      <div>
+        <app-input
+          icon="user"
+          type="text"
+          placeholder="Full Name"
+          [(ngModel)]="name"
+          name="name"
+          [required]="true"
+          class="transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] rounded-lg"
+        >
+          <ng-icon
+            name="user"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400 group-hover:text-green-300 transition-colors duration-200"
+          ></ng-icon>
+        </app-input>
+        <p
+          *ngIf="signupForm.controls['name']?.errors?.['required'] && signupForm.controls['name']?.touched"
+          class="text-red-400 text-sm mt-1"
+        >
+          Full Name is required.
+        </p>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <app-input
+          icon="mail"
+          type="email"
+          placeholder="Email Address"
+          [(ngModel)]="email"
+          name="email"
+          [required]="true"
+          pattern="^[a-zA-Z0-9._%+-]+&#64;gmail\.com$"
+          class="transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] rounded-lg"
+        >
+          <ng-icon
+            name="mail"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400 group-hover:text-green-300 transition-colors duration-200"
+          ></ng-icon>
+        </app-input>
+        <p
+          *ngIf="signupForm.controls['email']?.errors?.['required'] && signupForm.controls['email']?.touched"
+          class="text-red-400 text-sm mt-1"
+        >
+          Email is required.
+        </p>
+        <p
+          *ngIf="signupForm.controls['email']?.errors?.['pattern'] && signupForm.controls['email']?.touched"
+          class="text-red-400 text-sm mt-1"
+        >
+          Email must end with &#64;gmail.com.
+        </p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <app-input
+          icon="lock"
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="password"
+          name="password"
+          [required]="true"
+          class="transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] rounded-lg"
+        >
+          <ng-icon
+            name="lock"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400 group-hover:text-green-300 transition-colors duration-200"
+          ></ng-icon>
+        </app-input>
+        <p
+          *ngIf="signupForm.controls['password']?.touched && (signupForm.controls['password']?.errors?.['required'] || passwordStrengthValue < 2)"
+          class="text-red-400 text-sm mt-1"
+        >
+          Password must be at least Fair strength.
+        </p>
+        <app-password-strength-meter
+          [password]="password"
+          class="mt-2"
+        ></app-password-strength-meter>
+      </div>
+
+      <!-- General Error -->
+      <p
+        *ngIf="error"
+        class="text-red-400 font-medium mb-2 text-center bg-red-900/20 px-4 py-2 rounded-lg shadow-inner"
+      >
+        {{ error }}
+      </p>
+
+      <!-- Submit Button -->
+      <button
+        @buttonHover
+        type="submit"
+        [disabled]="isLoading || signupForm.invalid || passwordStrengthValue < 2"
+        class="relative w-full py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-4 focus:ring-green-400/40 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+      >
+        <span
+          class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        ></span>
+        <ng-icon
+          *ngIf="isLoading"
+          name="loader2"
+          class="w-6 h-6 animate-spin mx-auto relative z-10 text-green-300"
+        ></ng-icon>
+        <span *ngIf="!isLoading" class="relative z-10 text-lg">Sign Up</span>
+      </button>
+    </form>
+  </div>
+
+  <div
+    class="px-12 py-6 bg-gray-950/20 flex justify-center border-t border-green-500/10 relative z-10"
+  >
+    <p class="text-sm text-gray-200">
+      Already have an account?
+      <a
+        routerLink="/login"
+        class="text-green-300 font-medium hover:text-green-200 transition-colors duration-200 hover:underline"
+        >Login</a
+      >
+    </p>
+  </div>
+</div>

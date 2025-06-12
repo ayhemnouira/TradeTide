@@ -52,9 +52,10 @@ public class AuthService {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated()) {
+
             String jwt =jwtService.generateToken(user.getUsername());
             User authUser = repo.findByEmail(user.getUsername());
-            if(user.getTwoFactorAuth().isEnabled()){
+            if(authUser.getTwoFactorAuth().isEnabled()){
             String otp = OtpUtils.generateOtp();
                 TwoFactorOTP oldTwoFactorOTP = twoFactorOtpService.findByUser(authUser.getId());
             if (oldTwoFactorOTP != null) {
@@ -63,6 +64,7 @@ public class AuthService {
             TwoFactorOTP twoFactorOTP = twoFactorOtpService.createTwoFactorOtp(authUser, otp, jwt);
                 System.out.println(twoFactorOTP);
             emailService.sendVerificationEmail(authUser.getEmail(), otp);
+                return twoFactorOTP.getId();
             }
             return jwt;
         } else {

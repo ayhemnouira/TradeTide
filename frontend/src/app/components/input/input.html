@@ -1,0 +1,15 @@
+<div class="relative group">
+  <ng-icon
+    [name]="icon"
+    class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400 group-hover:text-green-300 transition-colors !text-green-400"
+  ></ng-icon>
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    [(ngModel)]="value"
+    (input)="onInput($event)"
+    (blur)="onTouched()"
+    [required]="required"
+    class="w-full pl-12 pr-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:border-green-500 focus:outline-none transition-all duration-300"
+  />
+</div>
