@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
-import { Login } from './components/login/login';
-import { Signup } from './components/signup/signup';
-import { ForgotPassword } from './components/forgot-password/forgot-password';
-import { ResetPassword } from './components/reset-password/reset-password';
-import { EmailVerification } from './components/email-verification/email-verification';
+import { Login } from './AuthComponents/login/login';
+import { Signup } from './AuthComponents/signup/signup';
+import { ForgotPassword } from './AuthComponents/forgot-password/forgot-password';
+import { ResetPassword } from './AuthComponents/reset-password/reset-password';
+import { EmailVerification } from './AuthComponents/email-verification/email-verification';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
+import { Home } from './components/home/home';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -19,4 +21,5 @@ export const routes: Routes = [
       { path: 'verify-email', component: EmailVerification },
     ],
   },
+  { path: 'home', component: Home, canActivate: [authGuard] },
 ];

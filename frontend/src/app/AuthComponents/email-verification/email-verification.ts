@@ -1,9 +1,9 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStore } from '../../services/auth.store';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-verification',
@@ -31,44 +31,70 @@ import { Router } from '@angular/router';
     ]),
   ],
 })
-export class EmailVerification {
+export class EmailVerification implements OnInit {
   code: string[] = ['', '', '', '', '', ''];
   isLoading = false;
   error: string | null = null;
-  @ViewChildren('inputRefs') inputRefs!: QueryList<any>;
+  id: string = '';
 
-  constructor(private authStore: AuthStore, private router: Router) {
+  @ViewChildren('inputRef') inputRefs!: QueryList<any>;
+
+  constructor(
+    private authStore: AuthStore,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
     this.authStore.error$.subscribe((error) => (this.error = error));
   }
 
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.id = params['id'] || '';
+    });
+  }
+
   get isSubmitDisabled(): boolean {
     return this.isLoading || this.code.some((digit: string) => !digit);
   }
 
+  trackByIndex(index: number): number {
+    return index;
+  }
+
   handleChange(index: number, value: string) {
+    if (!/^\d*$/.test(value)) return;
+
     const newCode = [...this.code];
+
     if (value.length > 1) {
-      const pastedCode = value.slice(0, 6).split('');
+      const pasted = value.slice(0, 6).split('');
       for (let i = 0; i < 6; i++) {
-        newCode[i] = pastedCode[i] || '';
+        newCode[i] = pasted[i] || '';
       }
       this.code = newCode;
-      const lastFilledIndex =
-        newCode.lastIndexOf('') === -1
-          ? 5
-          : Math.max(0, newCode.lastIndexOf('') - 1);
-      const focusIndex = lastFilledIndex < 5 ? lastFilledIndex + 1 : 5;
-      this.inputRefs.toArray()[focusIndex].nativeElement.focus();
+
+      const nextIndex = newCode.findIndex((d) => d === '');
+      const focusIndex = nextIndex === -1 ? 5 : nextIndex;
+
+      setTimeout(() => {
+        if (this.inputRefs.length > focusIndex) {
+          this.inputRefs.toArray()[focusIndex].nativeElement.focus();
+        }
+      });
     } else {
       newCode[index] = value;
       this.code = newCode;
+
       if (value && index < 5) {
-        this.inputRefs.toArray()[index + 1].nativeElement.focus();
+        setTimeout(() => {
+          this.inputRefs.toArray()[index + 1].nativeElement.focus();
+        });
       }
     }
+
     if (this.code.every((digit: string) => digit !== '')) {
       this.handleSubmit();
     }
@@ -76,14 +102,18 @@ export class EmailVerification {
 
   handleKeyDown(index: number, event: KeyboardEvent) {
     if (event.key === 'Backspace' && !this.code[index] && index > 0) {
-      this.inputRefs.toArray()[index - 1].nativeElement.focus();
+      setTimeout(() => {
+        this.inputRefs.toArray()[index - 1].nativeElement.focus();
+      });
     }
   }
+
   async handleSubmit() {
     const verificationCode = this.code.join('');
+    console.log('Submitting OTP:', verificationCode, 'with id:', this.id);
     try {
-      await this.authStore.verifyEmail(verificationCode);
-      this.router.navigate(['/']);
+      await this.authStore.verifyOtp(verificationCode, this.id);
+      this.router.navigate(['/home']);
     } catch {}
   }
 }

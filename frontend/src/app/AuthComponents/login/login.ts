@@ -1,26 +1,25 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+
 import { InputComponent } from '../input/input';
-import { PasswordStrengthMeter } from '../password-strength-meter/password-strength-meter';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthStore } from '../../services/auth.store';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { NgIconsModule } from '@ng-icons/core';
 
 @Component({
-  selector: 'app-signup',
+  selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
-    NgIconsModule,
     InputComponent,
-    PasswordStrengthMeter,
+    NgIconsModule,
   ],
-  templateUrl: './signup.html',
-  styleUrl: './signup.css',
+  templateUrl: './login.html',
+  styleUrl: './login.css',
   animations: [
     trigger('fadeIn', [
       transition(':enter', [
@@ -41,38 +40,40 @@ import { NgIconsModule } from '@ng-icons/core';
     ]),
   ],
 })
-export class Signup {
-  name = '';
+export class Login {
   email = '';
   password = '';
   isLoading = false;
   error: string | null = null;
+  successMessage: string | null = null;
 
   constructor(private authStore: AuthStore, private router: Router) {
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
     this.authStore.error$.subscribe((error) => (this.error = error));
+    this.authStore.message$.subscribe(
+      (message) => (this.successMessage = message)
+    );
   }
 
-  async handleSignUp() {
+  ngOnInit() {
+    this.email = '';
+    this.password = '';
+    this.error = null;
+    this.successMessage = null;
+  }
+
+  async handleLogin() {
     try {
-      await this.authStore.signup(this.email, this.password, this.name);
-      this.router.navigate(['/verify-email']);
+      const response = await this.authStore.login(this.email, this.password);
+      if (response.twoFactorId) {
+        this.router.navigate(['/verify-email'], {
+          queryParams: { id: response.twoFactorId },
+        });
+      } else if (response.jwt) {
+        this.router.navigate(['/home']);
+      }
     } catch {}
-  }
-  passwordStrength(password: string): number {
-    if (!password) return 0;
-    let strength = 0;
-    if (password.length > 5) strength++;
-    if (password.length > 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    return Math.min(strength, 4);
-  }
-
-  get passwordStrengthValue(): number {
-    return this.passwordStrength(this.password);
   }
 }

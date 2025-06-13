@@ -14,14 +14,17 @@
     <form (ngSubmit)="handleSubmit()" class="space-y-6">
       <div class="flex justify-between">
         <input
-          *ngFor="let digit of code; let i = index"
-          #inputRefs
+          *ngFor="let digit of code; let i = index; trackBy: trackByIndex"
+          #inputRef
           type="text"
-          maxlength="6"
+          maxlength="1"
+          pattern="[0-9]*"
+          inputmode="numeric"
           [(ngModel)]="code[i]"
-          (input)="handleChange(i, $any($event.target).value)"
+          (ngModelChange)="handleChange(i, $event)"
           (keydown)="handleKeyDown(i, $event)"
           class="w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:border-green-500 focus:outline-none"
+          name="digit{{ i }}"
         />
       </div>
       <p *ngIf="error" class="text-red-500 font-semibold mt-2">{{ error }}</p>
