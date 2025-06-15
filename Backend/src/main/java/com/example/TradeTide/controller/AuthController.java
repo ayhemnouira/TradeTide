@@ -32,16 +32,24 @@ public class AuthController {
     @PostMapping("/two-factor/otp/{otp}")
     public ResponseEntity<AuthResponse> verifyLoginOtp(
             @PathVariable String otp,
-            @RequestParam String id) throws Exception {
-        TwoFactorOTP twoFactorOTP = twoFactorOtpService.findById(id);
-        if(twoFactorOTP != null && twoFactorOtpService.verifyTwoFactorOtp(twoFactorOTP, otp)) {
+            @RequestParam String id) {
+        try {
+            TwoFactorOTP twoFactorOTP = twoFactorOtpService.findById(id);
+            if (twoFactorOTP != null && twoFactorOtpService.verifyTwoFactorOtp(twoFactorOTP, otp)) {
+                AuthResponse res = new AuthResponse();
+                res.setMessage("Login successful");
+                res.setTwoFactorEnabled(true);
+                res.setJwt(twoFactorOTP.getJwt());
+                return new ResponseEntity<>(res, HttpStatus.OK);
+            } else {
+                AuthResponse res = new AuthResponse();
+                res.setMessage("Invalid OTP");
+                return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
             AuthResponse res = new AuthResponse();
-            res.setMessage("Login successful");
-            res.setTwoFactorEnabled(true);
-            res.setJwt(twoFactorOTP.getJwt());
-            return new ResponseEntity<>(res, HttpStatus.OK);
+            res.setMessage("An error occurred");
+            return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        throw new Exception("invalid OTP");
-
     }
 }

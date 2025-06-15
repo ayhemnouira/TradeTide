@@ -19,6 +19,7 @@ export const routes: Routes = [
       { path: 'forgot-password', component: ForgotPassword },
       { path: 'reset-password/:token', component: ResetPassword },
       { path: 'verify-email', component: EmailVerification },
+      { path: 'verify-2fa', component: EmailVerification },
     ],
   },
   { path: 'home', component: Home, canActivate: [authGuard] },

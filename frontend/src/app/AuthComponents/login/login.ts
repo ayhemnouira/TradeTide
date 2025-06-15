@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { InputComponent } from '../input/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -68,9 +67,14 @@ export class Login {
     this.successMessage = null;
     this.route.queryParams.subscribe((params) => {
       const token = params['token'];
+      const twoFactorId = params['id'];
       if (token) {
         localStorage.setItem('jwt', token);
         this.router.navigate(['/home']);
+      } else if (twoFactorId) {
+        this.router.navigate(['/verify-email'], {
+          queryParams: { id: twoFactorId },
+        });
       }
     });
   }
