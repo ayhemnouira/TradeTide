@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { InputComponent } from '../input/input';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthStore } from '../../services/auth.store';
@@ -47,7 +47,11 @@ export class Login {
   error: string | null = null;
   successMessage: string | null = null;
 
-  constructor(private authStore: AuthStore, private router: Router) {
+  constructor(
+    private authStore: AuthStore,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
@@ -62,6 +66,13 @@ export class Login {
     this.password = '';
     this.error = null;
     this.successMessage = null;
+    this.route.queryParams.subscribe((params) => {
+      const token = params['token'];
+      if (token) {
+        localStorage.setItem('jwt', token);
+        this.router.navigate(['/home']);
+      }
+    });
   }
 
   async handleLogin() {
@@ -75,5 +86,9 @@ export class Login {
         this.router.navigate(['/home']);
       }
     } catch {}
+  }
+
+  loginWithGoogle() {
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 }

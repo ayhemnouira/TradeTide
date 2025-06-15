@@ -22,4 +22,5 @@ public class User {
 
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
+    private String provider = "LOCAL";
 }

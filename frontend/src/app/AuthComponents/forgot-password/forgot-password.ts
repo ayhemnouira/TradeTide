@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { InputComponent } from '../input/input';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AuthStore } from '../../services/auth.store';
@@ -52,7 +52,7 @@ export class ForgotPassword {
   error: string | null = null;
   message: string | null = null;
 
-  constructor(private authStore: AuthStore) {
+  constructor(private authStore: AuthStore, private router: Router) {
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
@@ -61,9 +61,14 @@ export class ForgotPassword {
   }
 
   async handleSubmit() {
-    await this.authStore.forgotPassword(this.email);
-    if (!this.error) {
+    try {
+      const id = await this.authStore.forgotPassword(this.email);
       this.isSubmitted = true;
+      await this.router.navigate(['/verify-email'], {
+        queryParams: { id, next: 'reset-password' },
+      });
+    } catch (error) {
+      console.error('Forgot password error:', error);
     }
   }
 }

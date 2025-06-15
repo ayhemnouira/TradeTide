@@ -87,6 +87,58 @@ public class UserController {
     }
 
     @PatchMapping("/auth/users/reset-password/verify-otp")
+    public ResponseEntity<ApiResponse> verifyOtpForReset(
+            @RequestParam String id,
+            @RequestBody ResetPasswordRequest req) throws Exception {
+        ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findById(id);
+        if (forgotPasswordToken == null) {
+            throw new Exception("Invalid or expired token");
+        }
+        boolean isVerified = forgotPasswordToken.getOtp().equals(req.getOtp());
+        if (isVerified) {
+            ApiResponse response = new ApiResponse();
+            response.setMessage("OTP verified successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        throw new Exception("Invalid OTP provided for resetting password");
+    }
+
+    @PatchMapping("/auth/users/reset-password")
+    public ResponseEntity<ApiResponse> resetPassword(
+            @RequestParam String id,
+            @RequestBody ResetPasswordRequest req) throws Exception {
+        ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findById(id);
+        if (forgotPasswordToken == null) {
+            throw new Exception("Invalid or expired token");
+        }
+        userService.updatePassword(forgotPasswordToken.getUser(), req.getNewPassword());
+        forgotPasswordService.deleteToken(forgotPasswordToken);
+        ApiResponse response = new ApiResponse();
+        response.setMessage("Password reset successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+/*
+    @PostMapping("/auth/users/reset-password/send-otp")
+    public ResponseEntity<AuthResponse> sendForgotPasswordOtp
+            (@RequestBody ForgotPasswordTokenRequest req) throws Exception {
+        User user = userService.findUsereByEmail(req.getSendTo());
+        String otp = OtpUtils.generateOtp();
+        UUID uuid = UUID.randomUUID();
+        String id = uuid.toString();
+        ForgotPasswordToken token = forgotPasswordService.createToken(user, id, otp, req.getVerificationType(), req.getSendTo());
+        if (req.getVerificationType().equals(VerificationType.EMAIL)) {
+            emailService.sendVerificationEmail(user.getEmail(), token.getOtp());
+        }
+        AuthResponse response = new AuthResponse();
+        response.setSession(token.getId());
+        response.setMessage("Password reset otp sent successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @PatchMapping("/auth/users/reset-password/verify-otp")
     public ResponseEntity<ApiResponse> resetPassword(
             @RequestParam String id,
             @RequestBody ResetPasswordRequest req,
@@ -96,11 +148,11 @@ public class UserController {
         ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findById(id);
         boolean isVerified = forgotPasswordToken.getOtp().equals(req.getOtp());
         if (isVerified) {
-          userService.updatePassword(forgotPasswordToken.getUser(), req.getNewPassword());
+            userService.updatePassword(forgotPasswordToken.getUser(), req.getNewPassword());
             ApiResponse response = new ApiResponse();
             response.setMessage("Password reset successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         throw new Exception("Invalid OTP provided for resetting password");
-    }
+    } */
 }

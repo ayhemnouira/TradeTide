@@ -36,6 +36,7 @@ export class EmailVerification implements OnInit {
   isLoading = false;
   error: string | null = null;
   id: string = '';
+  next: string = '';
 
   @ViewChildren('inputRef') inputRefs!: QueryList<any>;
 
@@ -53,6 +54,7 @@ export class EmailVerification implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.id = params['id'] || '';
+      this.next = params['next'] || '';
     });
   }
 
@@ -112,8 +114,15 @@ export class EmailVerification implements OnInit {
     const verificationCode = this.code.join('');
     console.log('Submitting OTP:', verificationCode, 'with id:', this.id);
     try {
-      await this.authStore.verifyOtp(verificationCode, this.id);
-      this.router.navigate(['/home']);
+      if (this.next === 'reset-password') {
+        await this.authStore.verifyOtpForReset(verificationCode, this.id);
+        this.router.navigate(['/reset-password/:token'], {
+          queryParams: { id: this.id },
+        });
+      } else {
+        await this.authStore.verifyOtp(verificationCode, this.id);
+        this.router.navigate(['/home']);
+      }
     } catch {}
   }
 }

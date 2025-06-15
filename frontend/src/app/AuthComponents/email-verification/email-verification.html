@@ -17,7 +17,7 @@
           *ngFor="let digit of code; let i = index; trackBy: trackByIndex"
           #inputRef
           type="text"
-          maxlength="1"
+          [maxlength]="1"
           pattern="[0-9]*"
           inputmode="numeric"
           [(ngModel)]="code[i]"

@@ -39,14 +39,14 @@ export class ResetPassword {
   isLoading = false;
   error: string | null = null;
   message: string | null = null;
-  token: string;
+  id: string;
 
   constructor(
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.token = this.route.snapshot.paramMap.get('token') || '';
+    this.id = this.route.snapshot.queryParams['id'] || '';
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
@@ -60,7 +60,7 @@ export class ResetPassword {
       return;
     }
     try {
-      await this.authStore.resetPassword(this.token, this.password);
+      await this.authStore.resetPassword(this.id, this.password);
       setTimeout(() => this.router.navigate(['/login']), 2000);
     } catch {}
   }

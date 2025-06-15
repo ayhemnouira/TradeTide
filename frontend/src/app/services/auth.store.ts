@@ -134,56 +134,92 @@ export class AuthStore {
       });
   }
 
-  forgotPassword(email: string): Promise<void> {
+  verifyOtpForReset(otp: string, id: string): Promise<void> {
     this.isLoading.next(true);
     this.error.next(null);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.email === email) {
-          this.message.next('Password reset link sent.');
-          this.isLoading.next(false);
-          resolve();
-        } else {
-          this.error.next('No account found for this email.');
-          this.isLoading.next(false);
-          resolve();
-        }
-      }, 1000);
-    });
-  }
+    this.message.next(null);
 
-  resetPassword(token: string, password: string): Promise<void> {
-    this.isLoading.next(true);
-    this.error.next(null);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.message.next('Password reset successfully.');
+    return this.http
+      .patch<ApiResponse>(
+        `http://localhost:8080/auth/users/reset-password/verify-otp?id=${id}`,
+        { otp },
+        { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+      )
+      .toPromise()
+      .then((response) => {
+        if (!response) throw new Error('No response from server');
         this.isLoading.next(false);
-        resolve();
-      }, 1000);
-    });
+        this.message.next(response.message || 'OTP verified successfully.');
+      })
+      .catch((err) => {
+        const errorMessage =
+          typeof err.error === 'string'
+            ? err.error
+            : err.error?.message || 'Invalid OTP';
+        this.error.next(errorMessage);
+        this.isLoading.next(false);
+        throw err;
+      });
   }
 
-  verifyEmail(code: string): Promise<void> {
+  forgotPassword(email: string): Promise<string> {
     this.isLoading.next(true);
     this.error.next(null);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (code === '123456') {
-          const user = JSON.parse(localStorage.getItem('user') || '{}');
-          user.verified = true;
-          localStorage.setItem('user', JSON.stringify(user));
-          this.isLoading.next(false);
-          resolve();
-        } else {
-          this.error.next('Invalid verification code.');
-          this.isLoading.next(false);
-          reject();
-        }
-      }, 10);
-    });
+    this.message.next(null);
+
+    return this.http
+      .post<AuthResponse>(
+        'http://localhost:8080/auth/users/reset-password/send-otp',
+        { sendTo: email, verificationType: 'EMAIL' }
+      )
+      .toPromise()
+      .then((response) => {
+        if (!response) throw new Error('No response from server');
+        this.isLoading.next(false);
+        this.message.next(
+          response.message || 'Password reset OTP sent successfully.'
+        );
+        return response.session;
+      })
+      .catch((err) => {
+        const errorMessage =
+          typeof err.error === 'string'
+            ? err.error
+            : err.error?.message || 'Failed to send reset OTP.';
+        this.error.next(errorMessage);
+        this.isLoading.next(false);
+        throw err;
+      });
   }
+
+  resetPassword(id: string, password: string): Promise<void> {
+    this.isLoading.next(true);
+    this.error.next(null);
+    this.message.next(null);
+
+    return this.http
+      .patch<ApiResponse>(
+        `http://localhost:8080/auth/users/reset-password?id=${id}`,
+        { newPassword: password },
+        { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+      )
+      .toPromise()
+      .then((response) => {
+        if (!response) throw new Error('No response from server');
+        this.isLoading.next(false);
+        this.message.next(response.message || 'Password reset successfully.');
+      })
+      .catch((err) => {
+        const errorMessage =
+          typeof err.error === 'string'
+            ? err.error
+            : err.error?.message || 'Failed to reset password.';
+        this.error.next(errorMessage);
+        this.isLoading.next(false);
+        throw err;
+      });
+  }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('jwt');
   }
@@ -203,4 +239,8 @@ interface AuthResponse {
   message: string;
   twoFactorEnabled: boolean;
   jwt: string;
+  session: string;
+}
+interface ApiResponse {
+  message: string;
 }

@@ -13,10 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -35,24 +33,26 @@ public class SecurityConfig {
 
     private LogoutHandler logoutHandler;
 
+    @Autowired
+    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
-                .csrf(AbstractHttpConfigurer::disable).
-                authorizeHttpRequests(request -> request
-                        .requestMatchers("login", "register","/two-factor/otp/**").permitAll()
-                        .anyRequest().authenticated()).
-                httpBasic(Customizer.withDefaults()).
-                sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/register", "/two-factor/otp/**", "/auth/users/reset-password/**", "/auth/google", "/oauth2/authorization/google", "/login/oauth2/code/google").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth -> oauth
+                        .successHandler(oAuth2LoginSuccessHandler)
+                )
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(cors ->cors.configurationSource(corsConfigurationSource()))
-
-
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .build();
-
-
     }
+
 
     private CorsConfigurationSource corsConfigurationSource() {
         return null;

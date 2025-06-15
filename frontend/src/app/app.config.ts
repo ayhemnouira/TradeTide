@@ -5,10 +5,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideArrowLeft,
-  lucideLoader, // Ensure correct import
+  lucideLoader,
   lucideLock,
   lucideMail,
   lucideUser,
+  lucideSparkles, // Add this import
 } from '@ng-icons/lucide';
 import { routes } from './app.routes';
 
@@ -24,6 +25,7 @@ export const appConfig: ApplicationConfig = {
       user: lucideUser,
       loader2: lucideLoader,
       arrowLeft: lucideArrowLeft,
+      sparkles: lucideSparkles, // Add this mapping
     }),
   ],
 };
