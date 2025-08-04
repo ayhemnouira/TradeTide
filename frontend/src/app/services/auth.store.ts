@@ -61,7 +61,6 @@ export class AuthStore {
       )
       .toPromise()
       .then((response) => {
-        console.log('Login response:', response); // Debug log
         this.isLoading.next(false);
         if (!response) {
           this.error.next('No response from server');
@@ -71,7 +70,7 @@ export class AuthStore {
           this.error.next('Invalid email or password');
           throw new Error('Login failed');
         }
-        // JWTs are long and contain dots (header.payload.signature)
+
         if (response.includes('.') && response.length > 50) {
           this.message.next('Login successful!');
           localStorage.setItem('jwt', response);
@@ -97,7 +96,6 @@ export class AuthStore {
       });
   }
 
-  // In auth.store.ts
   verifyOtp(otp: string, id: string): Promise<string> {
     this.isLoading.next(true);
     this.error.next(null);

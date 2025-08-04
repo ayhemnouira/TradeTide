@@ -34,14 +34,14 @@ public class UserController {
     @GetMapping("/api/users/profile")
     public ResponseEntity<User> getUserProfile(Authentication authentication) throws Exception {
         String email = authentication.getName();
-        User user = userService.findUsereByEmail(email);
+        User user = userService.findUserByEmail(email);
         return ResponseEntity.ok(user);
     }
     @PostMapping("/api/users/verification/{verificationType}/send-otp")
     public ResponseEntity<String> sendVerificationOtp(Authentication authentication,
                                                     @PathVariable VerificationType verificationType) throws Exception {
         String email = authentication.getName();
-        User user = userService.findUsereByEmail(email);
+        User user = userService.findUserByEmail(email);
        VerificationCode verificationCode = verificationCodeService
                .getVerificationCodeByUserId(user.getId());
         if (verificationCode == null) {
@@ -57,7 +57,7 @@ public class UserController {
             @PathVariable String otp,
             Authentication authentication) throws Exception {
         String email = authentication.getName();
-        User user = userService.findUsereByEmail(email);
+        User user = userService.findUserByEmail(email);
         VerificationCode verificationCode = verificationCodeService.getVerificationCodeByUserId(user.getId());
         String sendTo = verificationCode.getVerificationType().equals(VerificationType.EMAIL) ? verificationCode.getEmail() : verificationCode.getMobileNumber();
         boolean isVerified = verificationCode.getOtp().equals(otp);
@@ -72,7 +72,7 @@ public class UserController {
     @PostMapping("/auth/users/reset-password/send-otp")
     public ResponseEntity<AuthResponse> sendForgotPasswordOtp
             (@RequestBody ForgotPasswordTokenRequest req) throws Exception {
-        User user = userService.findUsereByEmail(req.getSendTo());
+        User user = userService.findUserByEmail(req.getSendTo());
         String otp = OtpUtils.generateOtp();
         UUID uuid = UUID.randomUUID();
         String id = uuid.toString();

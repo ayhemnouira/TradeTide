@@ -1,25 +1,158 @@
-<div
-  class="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4"
->
-  <div
-    class="max-w-2xl w-full bg-gray-800/50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-green-500/20"
-  >
-    <h1
-      class="text-3xl font-bold text-center bg-gradient-to-r from-green-400 to-teal-400 text-transparent bg-clip-text mb-6"
-    >
-      Welcome to Your Home Page
-    </h1>
-    <p class="text-gray-200 text-center mb-8">
-      You have successfully logged in! Explore your dashboard or manage your
-      account.
-    </p>
-    <div class="flex justify-center space-x-4">
-      <button
-        (click)="logout()"
-        class="py-2 px-6 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg shadow-md hover:from-red-600 hover:to-red-700 transition-all duration-300"
-      >
-        Log Out
-      </button>
+<div class="banner">
+  <div class="container">
+    <div class="header">
+      <h2>TradeTide</h2>
+      <h6>Explore the Latest Cryptocurrency Updates</h6>
     </div>
+    <div class="scroll-content">
+      <ng-container *ngFor="let row of bannerData">
+        <div
+          class="card"
+          (click)="viewCoinChart(row.id, row.name)"
+          style="cursor: pointer"
+        >
+          <img [src]="row.image" class="img-fluid" alt="{{ row.symbol }}" />
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ row.symbol }}
+              <span
+                class="change"
+                [ngClass]="{
+                  'text-danger': row.market_cap_change_percentage_24h < 0,
+                  'text-success': row.market_cap_change_percentage_24h >= 0
+                }"
+              >
+                {{ row.market_cap_change_percentage_24h | number: '1.2-2' }}%
+              </span>
+            </h5>
+            <p class="card-text">
+              {{ row.current_price | currency: 'USD':'symbol':'1.2-2' }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="table-container">
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search coins..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+    />
+    <span class="material-icons search-icon">search</span>
+    <button
+      class="clear-button"
+      [class.visible]="searchQuery"
+      (click)="clearSearch()"
+    >
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  <div class="table-toggle">
+    <button
+      class="toggle-btn"
+      [ngClass]="{ active: showTop50 }"
+      (click)="toggleTable(true)"
+    >
+      Top 50 Coins
+    </button>
+    <button
+      class="toggle-btn"
+      [ngClass]="{ active: !showTop50 }"
+      (click)="toggleTable(false)"
+    >
+      All Coins
+    </button>
+  </div>
+  <div *ngIf="searchError && isSearching && !showTop50" class="no-results">
+    {{ searchError }}
+  </div>
+  <table *ngIf="showTop50" class="coin-table">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Symbol</th>
+        <th>Price (USD)</th>
+        <th>Market Cap</th>
+        <th>24h Change</th>
+        <th>24h Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let coin of top50Coins"
+        (click)="viewCoinChart(coin.id, coin.name)"
+        style="cursor: pointer"
+      >
+        <td>{{ coin.market_cap_rank }}</td>
+        <td>
+          <img src="{{ coin.image }}" alt="{{ coin.name }}" width="24" />
+          {{ coin.name }}
+        </td>
+        <td>{{ coin.symbol }}</td>
+        <td>{{ coin.current_price | currency: 'USD':'symbol':'1.2-2' }}</td>
+        <td>{{ coin.market_cap | currency: 'USD':'symbol':'1.0-0' }}</td>
+        <td
+          [ngClass]="
+            coin.price_change_percentage_24h >= 0 ? 'text-success' : 'text-danger'
+          "
+        >
+          {{ coin.price_change_percentage_24h | number: '1.2-2' }}%
+        </td>
+        <td>{{ coin.total_volume | currency: 'USD':'symbol':'1.0-0' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table *ngIf="!showTop50" class="coin-table">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Symbol</th>
+        <th>Price (USD)</th>
+        <th>Market Cap</th>
+        <th>24h Change</th>
+        <th>24h Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let coin of filteredCoinList"
+        (click)="viewCoinChart(coin.id, coin.name)"
+        style="cursor: pointer"
+      >
+        <td>{{ coin.market_cap_rank }}</td>
+        <td>
+          <img src="{{ coin.image }}" alt="{{ coin.name }}" width="24" />
+          {{ coin.name }}
+        </td>
+        <td>{{ coin.symbol }}</td>
+        <td>{{ coin.current_price | currency: 'USD':'symbol':'1.2-2' }}</td>
+        <td>{{ coin.market_cap | currency: 'USD':'symbol':'1.0-0' }}</td>
+        <td
+          [ngClass]="
+            coin.price_change_percentage_24h >= 0 ? 'text-success' : 'text-danger'
+          "
+        >
+          {{ coin.price_change_percentage_24h | number: '1.2-2' }}%
+        </td>
+        <td>{{ coin.total_volume | currency: 'USD':'symbol':'1.0-0' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="pagination" *ngIf="!isSearching && !showTop50">
+    <button
+      (click)="changePage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <span>Page {{ currentPage }}</span>
+    <button (click)="changePage(currentPage + 1)">Next</button>
   </div>
 </div>

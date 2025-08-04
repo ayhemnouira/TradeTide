@@ -112,7 +112,6 @@ export class EmailVerification implements OnInit {
 
   async handleSubmit() {
     const verificationCode = this.code.join('');
-    console.log('Submitting OTP:', verificationCode, 'with id:', this.id);
     try {
       if (this.next === 'reset-password') {
         await this.authStore.verifyOtpForReset(verificationCode, this.id);

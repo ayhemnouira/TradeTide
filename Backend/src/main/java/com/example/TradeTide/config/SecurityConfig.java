@@ -40,7 +40,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/two-factor/otp/**", "/auth/users/reset-password/**", "/auth/google", "/oauth2/authorization/google", "/login/oauth2/code/google").permitAll()
+                        .requestMatchers("/login", "/register", "/two-factor/otp/**", "/auth/users/reset-password/**", "/auth/google",
+                                "/oauth2/authorization/google", "/login/oauth2/code/google","/coins/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
@@ -83,8 +84,6 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         provider.setUserDetailsService(userDetailsService);
-
-
         return provider;
     }
 

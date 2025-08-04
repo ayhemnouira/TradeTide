@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PasswordOtpVerif } from './password-otp-verif';
+import { MainLayout } from './main-layout';
 
-describe('PasswordOtpVerif', () => {
-  let component: PasswordOtpVerif;
-  let fixture: ComponentFixture<PasswordOtpVerif>;
+describe('MainLayout', () => {
+  let component: MainLayout;
+  let fixture: ComponentFixture<MainLayout>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasswordOtpVerif]
+      imports: [MainLayout]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PasswordOtpVerif);
+    fixture = TestBed.createComponent(MainLayout);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

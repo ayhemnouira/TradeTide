@@ -7,10 +7,12 @@ import { EmailVerification } from './AuthComponents/email-verification/email-ver
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { Home } from './components/home/home';
 import { authGuard } from './guards/auth-guard';
+import { MainLayout } from './layouts/main-layout/main-layout';
+import { CoinChartComponent } from './components/coin-chart/coin-chart';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'auth',
     component: AuthLayout,
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -22,5 +24,14 @@ export const routes: Routes = [
       { path: 'verify-2fa', component: EmailVerification },
     ],
   },
-  { path: 'home', component: Home, canActivate: [authGuard] },
+  {
+    path: '',
+    component: MainLayout,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: Home },
+      { path: 'chart/:id', component: CoinChartComponent },
+    ],
+  },
 ];

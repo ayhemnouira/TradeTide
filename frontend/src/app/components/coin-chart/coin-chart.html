@@ -1,0 +1,50 @@
+<div class="chart-container">
+  <div class="header">
+    <h1>{{ coinName | uppercase }} Price Chart</h1>
+    <p>{{ selectedDays }}-Day Price History (USD)</p>
+  </div>
+
+  <div class="period-selector">
+    <button
+      (click)="changePeriod(1)"
+      [class.active]="selectedDays === 1"
+      class="period-btn"
+    >
+      1D
+    </button>
+    <button
+      (click)="changePeriod(7)"
+      [class.active]="selectedDays === 7"
+      class="period-btn"
+    >
+      7D
+    </button>
+    <button
+      (click)="changePeriod(30)"
+      [class.active]="selectedDays === 30"
+      class="period-btn"
+    >
+      30D
+    </button>
+  </div>
+
+  <div class="chart-wrapper">
+    <canvas
+      *ngIf="chartData && !loading && !error"
+      baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      type="line"
+    ></canvas>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      Loading chart data...
+    </div>
+
+    <div *ngIf="error" class="error">
+      <span class="error-icon">error_outline</span>
+      {{ error }}
+    </div>
+  </div>
+</div>

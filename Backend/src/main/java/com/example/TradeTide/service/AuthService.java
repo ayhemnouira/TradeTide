@@ -31,7 +31,8 @@ public class AuthService {
 
     @Autowired
     private  EmailService emailService;
-
+    @Autowired
+    private WatchListService watchListService;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -45,6 +46,7 @@ public class AuthService {
         }
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
+        watchListService.createWatchList(user);
         return user;
     }
 
