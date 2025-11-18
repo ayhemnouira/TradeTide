@@ -5,7 +5,7 @@
 ![TradeTide Banner](https://via.placeholder.com/1200x300/1a1f2e/00ff88?text=TradeTide+-+Professional+Trading+Platform)
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Angular](https://img.shields.io/badge/Angular-17.x-red.svg)](https://angular.io/)
+[![Angular](https://img.shields.io/badge/Angular-20.x-red.svg)](https://angular.io/)
 [![JWT](https://img.shields.io/badge/JWT-Authentication-orange.svg)](https://jwt.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -75,7 +75,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ┌─────────────────────────────────────────────────────────────┐
 │                        Client Layer                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Angular 17  │  │  TypeScript  │  │     SCSS     │      │
+│  │  Angular 20  │  │  TypeScript  │  │     SCSS     │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
                               │
