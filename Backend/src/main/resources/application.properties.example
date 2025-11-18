@@ -1,0 +1,31 @@
+spring.application.name=TradeTide
+spring.datasource.url=jdbc:mysql://localhost:3306/TradeTideDB?createDatabaseIfNotExist=true&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.passworYOUR_MYSQL_PASSWORD_HERE
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=tradetide85@gmail.com
+spring.mail.passwyour-gmail-app-password-here
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+spring.security.oauth2.client.registration.googlyour-google-client-id-here
+spring.security.oauth2.client.registration.your-google-clien
+spring.security.oauth2.client.registration.google.scope=email,profile
+spring.security.oauth2.client.registration.google.redirect-uri=http://localhost:8080/login/oauth2/code/google
+spring.security.oauth2.client.registration.google.client-name=Google
+
+spring.security.oauth2.client.provider.google.authorization-uri=https://accounts.google.com/o/oauth2/v2/auth
+spring.security.oauth2.client.provider.google.token-uri=https://oauth2.googleapis.com/token
+spring.security.oauth2.client.provider.google.user-info-uri=https://www.googleapis.com/oauth2/v3/userinfo
+spring.security.oauth2.client.provider.google.user-name-attribute=sub
+
+# Disable the default Spring Boot banner
+#spring.main.banner-mode=off
+# Logging configuration0
+#logging.level.root=warn
+
+// http://localhost:8080/login/oauth2/code/google 

@@ -1,3 +1,8 @@
+```
+# Ignore application.properties with sensitive passwords
+src/main/resources/application.properties
+
+# Rest of the gitignore
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
