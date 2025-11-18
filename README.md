@@ -178,7 +178,7 @@ TradeTide is a **full-stack cryptocurrency trading platform** that provides real
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/tradetide.git
+git clone https://github.com/ayhemnouira/TradeTide.git
 cd tradetide/backend
 
 # Configure application.properties
