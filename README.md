@@ -5,7 +5,7 @@
 ![TradeTide Banner](https://via.placeholder.com/1200x300/1a1f2e/00ff88?text=TradeTide+-+Professional+Trading+Platform)
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
+[![Angular](https://img.shields.io/badge/Angular-17.x-red.svg)](https://angular.io/)
 [![JWT](https://img.shields.io/badge/JWT-Authentication-orange.svg)](https://jwt.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -24,9 +24,9 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ### 🎯 Key Achievements
 
 - ⚡ **30% reduction in API response time** through optimized database queries and caching strategies
-- 🔒 **Enterprise-grade security** with JWT authentication, 2FA, and OAuth 2.0 integration
+- 🔒 **Enterprise-grade security** with JWT authentication and 2FA email verification
 - 📈 **Real-time data synchronization** with CoinGecko API for live cryptocurrency prices
-- 🎨 **Modern, responsive UI** with cryptocurrency-themed design and smooth animations
+- 🎨 **Modern, responsive UI** built with Angular featuring cryptocurrency-themed design
 - 📧 **Automated email verification** system with professional HTML templates
 
 ---
@@ -38,8 +38,8 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
   - JWT-based stateless authentication
   - Two-Factor Authentication (2FA) via email OTP
   - Password reset with secure token verification
-  - OAuth 2.0 social login integration (Google)
   - BCrypt password encryption
+  - Password strength validation meter
 
 ### 💹 Trading Features
 - **Real-time Market Data**
@@ -52,7 +52,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ### 📊 Data Visualization
 - **Interactive Charts**
   - 7-day price history with beautiful gradients
-  - Responsive chart components
+  - Responsive chart components using Chart.js
   - Multiple timeframe analysis
   - Market cap and 24h volume tracking
 
@@ -62,6 +62,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
   - Email verification workflow
   - Password strength validation
   - User profile management
+  - Two-factor authentication toggle
 
 ---
 
@@ -73,7 +74,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ┌─────────────────────────────────────────────────────────────┐
 │                        Client Layer                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  React App   │  │  TypeScript  │  │   Tailwind   │      │
+│  │  Angular 17  │  │  TypeScript  │  │     SCSS     │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -127,6 +128,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 - **DTO Pattern** for data transfer optimization
 - **Builder Pattern** for JWT token generation
 - **Singleton Pattern** for service instances
+- **Guard Pattern** for Angular route protection
 
 ---
 
@@ -145,10 +147,11 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ### Frontend
 | Technology | Purpose |
 |------------|---------|
-| ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black) | UI Framework |
+| ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white) | Frontend Framework |
 | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) | Type Safety |
-| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat&logo=tailwind-css&logoColor=white) | Styling |
-| ![Recharts](https://img.shields.io/badge/Recharts-FF6B6B?style=flat&logo=chart.js&logoColor=white) | Data Visualization |
+| ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat&logo=sass&logoColor=white) | Styling |
+| ![RxJS](https://img.shields.io/badge/RxJS-B7178C?style=flat&logo=reactivex&logoColor=white) | Reactive Programming |
+| ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chart.js&logoColor=white) | Data Visualization |
 
 ### DevOps & Tools
 | Technology | Purpose |
@@ -165,9 +168,10 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 
 ```bash
 - Java 17 or higher
-- Node.js 16+ and npm/yarn
+- Node.js 18+ and npm
 - MongoDB 6.x
 - Maven 3.8+
+- Angular CLI 17+
 ```
 
 ### Backend Setup
@@ -202,14 +206,20 @@ cd tradetide/frontend
 # Install dependencies
 npm install
 
-# Create .env file
-echo "REACT_APP_API_URL=http://localhost:8080" > .env
+# Create environment file
+ng generate environments
+
+# Update src/environments/environment.ts with:
+# export const environment = {
+#   production: false,
+#   apiUrl: 'http://localhost:8080'
+# };
 
 # Start development server
-npm start
+ng serve
 ```
 
-The frontend application will start on `http://localhost:3000`
+The frontend application will start on `http://localhost:4200`
 
 ### Docker Setup (Alternative)
 
@@ -219,7 +229,7 @@ docker-compose up --build
 
 # The application will be available at:
 # Backend: http://localhost:8080
-# Frontend: http://localhost:3000
+# Frontend: http://localhost:4200
 # MongoDB: localhost:27017
 ```
 
@@ -354,7 +364,7 @@ Authorization: Bearer {jwt_token}
 
 ### Authentication Flow
 ![Login Screen](https://via.placeholder.com/800x450/1a1f2e/00ff88?text=Login+Screen)
-*Secure login with OAuth 2.0 integration*
+*Secure login with email verification*
 
 ![Email Verification](https://via.placeholder.com/800x450/1a1f2e/00ff88?text=Email+Verification)
 *OTP-based email verification system*
@@ -396,17 +406,18 @@ Authorization: Bearer {jwt_token}
 
 ### Backend Optimizations
 - ✅ **Database Query Optimization**: Indexed fields and efficient queries
-- ✅ **Caching Strategy**: Redis integration for frequently accessed data
+- ✅ **Caching Strategy**: In-memory caching for frequently accessed data
 - ✅ **Connection Pooling**: Optimized database connections
 - ✅ **Async Processing**: Non-blocking email sending
 - ✅ **API Response Compression**: Gzip compression enabled
 
 ### Frontend Optimizations
-- ✅ **Code Splitting**: Lazy loading of routes and components
-- ✅ **Memoization**: React.memo for expensive components
+- ✅ **Lazy Loading**: Route-based code splitting
+- ✅ **OnPush Change Detection**: Optimized component rendering
+- ✅ **RxJS Operators**: Efficient reactive data handling
 - ✅ **Debouncing**: Search input optimization
 - ✅ **Virtual Scrolling**: Efficient rendering of large lists
-- ✅ **Image Optimization**: Lazy loading and modern formats
+- ✅ **AOT Compilation**: Ahead-of-time compilation for production
 
 ---
 
@@ -433,13 +444,34 @@ tradetide/
 │   ├── pom.xml
 │   └── Dockerfile
 ├── frontend/
-│   ├── public/
 │   ├── src/
-│   │   ├── components/                # React Components
-│   │   ├── pages/                     # Page Components
-│   │   ├── services/                  # API Services
-│   │   ├── utils/                     # Helper Functions
-│   │   └── App.tsx
+│   │   ├── app/
+│   │   │   ├── components/            # Reusable Components
+│   │   │   │   ├── coin-chart/
+│   │   │   │   ├── email-verification/
+│   │   │   │   ├── forgot-password/
+│   │   │   │   ├── header-component/
+│   │   │   │   ├── input/
+│   │   │   │   ├── login/
+│   │   │   │   ├── password-strength-meter/
+│   │   │   │   ├── reset-password/
+│   │   │   │   ├── sidebar-component/
+│   │   │   │   └── signup/
+│   │   │   ├── guards/                # Route Guards
+│   │   │   │   └── auth-guard.ts
+│   │   │   ├── layouts/               # Layout Components
+│   │   │   │   ├── auth-layout/
+│   │   │   │   └── main-layout/
+│   │   │   ├── services/              # Angular Services
+│   │   │   │   ├── auth.store.ts
+│   │   │   │   └── coinService.ts
+│   │   │   └── app.config.ts
+│   │   ├── assets/                    # Static Assets
+│   │   │   ├── banner2.jpg
+│   │   │   └── favicon.ico
+│   │   ├── environments/              # Environment Config
+│   │   └── styles.scss               # Global Styles
+│   ├── angular.json
 │   ├── package.json
 │   └── Dockerfile
 ├── docker-compose.yml
@@ -465,13 +497,13 @@ mvn jacoco:report
 ### Frontend Tests
 ```bash
 # Run tests
-npm test
+ng test
 
 # Run tests with coverage
-npm test -- --coverage
+ng test --code-coverage
 
 # Run E2E tests
-npm run test:e2e
+ng e2e
 ```
 
 ---
@@ -492,10 +524,10 @@ java -jar target/tradetide-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 #### Frontend
 ```bash
 # Create optimized build
-npm run build
+ng build --configuration production
 
 # Serve with static server
-npx serve -s build
+npx serve -s dist/tradetide
 ```
 
 ### Docker Deployment
@@ -529,7 +561,7 @@ docker-compose -f docker-compose.prod.yml up -d
 - [ ] Technical analysis indicators
 - [ ] Price alerts and notifications
 - [ ] Social trading features
-- [ ] Mobile application (React Native)
+- [ ] Mobile application (Ionic)
 - [ ] Advanced charting with TradingView
 
 ### Phase 4 - Scale & Optimize 🔮
@@ -567,7 +599,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 📧 Email: ayhemnouira9@gmail.com
 - 💼 LinkedIn: [Ayhem Nouira](https://linkedin.com/in/ayhem-nouira)
 - 🐙 GitHub: [@ayhemnouira](https://github.com/ayhemnouira)
-- 🌐 Portfolio: [View Portfolio](your-portfolio-url)
 
 *Software Engineering Student at ESPRIT Monastir specializing in Full-Stack Development with a passion for building scalable FinTech solutions.*
 
@@ -577,8 +608,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [CoinGecko API](https://www.coingecko.com/) for cryptocurrency data
 - [Spring Boot](https://spring.io/projects/spring-boot) for the amazing framework
-- [React](https://reactjs.org/) for the powerful UI library
-- [Tailwind CSS](https://tailwindcss.com/) for beautiful styling utilities
+- [Angular](https://angular.io/) for the powerful frontend framework
+- [Chart.js](https://www.chartjs.org/) for beautiful data visualization
 - [JWT](https://jwt.io/) for secure authentication standards
 
 ---
