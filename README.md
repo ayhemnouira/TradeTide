@@ -24,9 +24,9 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ### 🎯 Key Achievements
 
 - ⚡ **30% reduction in API response time** through optimized database queries and caching strategies
-- 🔒 **Enterprise-grade security** with JWT authentication and 2FA email verification
+- 🔒 **Enterprise-grade security** with JWT authentication, OAuth 2.0, and 2FA email verification
 - 📈 **Real-time data synchronization** with CoinGecko API for live cryptocurrency prices
-- 🎨 **Modern, responsive UI** built with Angular featuring cryptocurrency-themed design
+- 🎨 **Modern, responsive UI** built with Angular 20 and Tailwind CSS
 - 📧 **Automated email verification** system with professional HTML templates
 
 ---
@@ -36,6 +36,7 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 ### 🔐 Authentication & Security
 - **Multi-layered Authentication System**
   - JWT-based stateless authentication
+  - OAuth 2.0 social login (Google Sign-In)
   - Two-Factor Authentication (2FA) via email OTP
   - Password reset with secure token verification
   - BCrypt password encryption
@@ -150,8 +151,10 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 | ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white) | Frontend Framework |
 | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) | Type Safety |
 | ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat&logo=sass&logoColor=white) | Styling |
+| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat&logo=tailwind-css&logoColor=white) | Utility-First CSS |
 | ![RxJS](https://img.shields.io/badge/RxJS-B7178C?style=flat&logo=reactivex&logoColor=white) | Reactive Programming |
 | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chart.js&logoColor=white) | Data Visualization |
+| ![Google OAuth](https://img.shields.io/badge/Google%20OAuth-4285F4?style=flat&logo=google&logoColor=white) | Social Authentication |
 
 ### DevOps & Tools
 | Technology | Purpose |
@@ -171,7 +174,8 @@ TradeTide is a **high-performance, real-time cryptocurrency trading platform** d
 - Node.js 18+ and npm
 - MongoDB 6.x
 - Maven 3.8+
-- Angular CLI 17+
+- Angular CLI 20+
+- Google OAuth 2.0 Client ID (for social login)
 ```
 
 ### Backend Setup
@@ -212,7 +216,8 @@ ng generate environments
 # Update src/environments/environment.ts with:
 # export const environment = {
 #   production: false,
-#   apiUrl: 'http://localhost:8080'
+#   apiUrl: 'http://localhost:8080',
+#   googleClientId: 'your-google-client-id.apps.googleusercontent.com'
 # };
 
 # Start development server
