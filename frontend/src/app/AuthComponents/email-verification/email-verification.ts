@@ -55,6 +55,16 @@ export class EmailVerification implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.id = params['id'] || '';
       this.next = params['next'] || '';
+
+      // ✅ ADD THESE DEBUG LOGS
+      console.log('📍 === EmailVerification ngOnInit ===');
+      console.log('📍 Full URL params:', params);
+      console.log('📍 Session ID:', this.id);
+      console.log('📍 Next route:', `"${this.next}"`); // Quotes show whitespace
+      console.log(
+        '📍 Is next === reset-password?',
+        this.next === 'reset-password'
+      );
     });
   }
 
@@ -109,19 +119,20 @@ export class EmailVerification implements OnInit {
       });
     }
   }
-
   async handleSubmit() {
     const verificationCode = this.code.join('');
     try {
       if (this.next === 'reset-password') {
         await this.authStore.verifyOtpForReset(verificationCode, this.id);
-        this.router.navigate(['/reset-password/:token'], {
+
+        await this.router.navigate(['/auth/reset-password'], {
           queryParams: { id: this.id },
         });
       } else {
         await this.authStore.verifyOtp(verificationCode, this.id);
-        this.router.navigate(['/home']);
+
+        await this.router.navigate(['/home']);
       }
-    } catch {}
+    } catch (error) {}
   }
 }

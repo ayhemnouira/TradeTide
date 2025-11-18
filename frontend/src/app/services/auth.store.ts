@@ -27,7 +27,7 @@ export class AuthStore {
         email,
         password,
         username: name,
-      }) // Update URL if different
+      })
       .toPromise()
       .then((user) => {
         localStorage.setItem(
@@ -81,7 +81,7 @@ export class AuthStore {
         }
       })
       .catch((err) => {
-        console.error('Login error:', err); // Debug log
+        console.error('Login error:', err);
         let errorMessage = 'Login failed';
         if (err.status === 401) {
           errorMessage = 'Invalid email or password';
@@ -101,7 +101,7 @@ export class AuthStore {
     this.error.next(null);
     this.message.next(null);
 
-    const jwt = localStorage.getItem('jwt') || ''; // get JWT token stored after login
+    const jwt = localStorage.getItem('jwt') || '';
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwt}`,
@@ -138,7 +138,7 @@ export class AuthStore {
     this.message.next(null);
 
     return this.http
-      .patch<ApiResponse>(
+      .patch<ApiResponse>( // ← CHANGED BACK TO .patch
         `http://localhost:8080/auth/users/reset-password/verify-otp?id=${id}`,
         { otp },
         { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
@@ -150,6 +150,7 @@ export class AuthStore {
         this.message.next(response.message || 'OTP verified successfully.');
       })
       .catch((err) => {
+        console.error('OTP verification error:', err); // Better error logging
         const errorMessage =
           typeof err.error === 'string'
             ? err.error
@@ -196,7 +197,7 @@ export class AuthStore {
     this.message.next(null);
 
     return this.http
-      .patch<ApiResponse>(
+      .patch<ApiResponse>( // ← CHANGED BACK TO .patch
         `http://localhost:8080/auth/users/reset-password?id=${id}`,
         { newPassword: password },
         { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
@@ -221,6 +222,7 @@ export class AuthStore {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('jwt');
   }
+
   logout(): void {
     localStorage.removeItem('jwt');
     this.message.next(null);
@@ -228,17 +230,20 @@ export class AuthStore {
     this.twoFactorId.next(null);
   }
 }
+
 interface User {
   email: string;
   username: string;
   password: string;
 }
+
 interface AuthResponse {
   message: string;
   twoFactorEnabled: boolean;
   jwt: string;
   session: string;
 }
+
 interface ApiResponse {
   message: string;
 }

@@ -64,7 +64,7 @@ export class ForgotPassword {
     try {
       const id = await this.authStore.forgotPassword(this.email);
       this.isSubmitted = true;
-      await this.router.navigate(['/verify-email'], {
+      await this.router.navigate(['/auth/verify-email'], {
         queryParams: { id, next: 'reset-password' },
       });
     } catch (error) {

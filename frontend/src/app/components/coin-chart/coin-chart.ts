@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router'; // Remove ActivatedRouteSnapshot
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { coinService } from '../../services/coinService';
@@ -95,13 +95,16 @@ export class CoinChartComponent implements OnInit {
   selectedDays: number = 7;
 
   constructor(
-    private route: ActivatedRouteSnapshot,
+    private route: ActivatedRoute, // Changed from ActivatedRouteSnapshot
     private coinService: coinService
   ) {}
 
   ngOnInit(): void {
-    this.coinId = this.route.paramMap.get('id');
-    this.coinName = this.route.queryParamMap.get('name') || this.coinId;
+    // Use snapshot to get the current values
+    this.coinId = this.route.snapshot.paramMap.get('id');
+    this.coinName =
+      this.route.snapshot.queryParamMap.get('name') || this.coinId;
+
     if (this.coinId) {
       this.loadChartData(this.coinId, this.selectedDays);
     }

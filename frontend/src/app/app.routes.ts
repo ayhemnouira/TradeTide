@@ -12,6 +12,11 @@ import { CoinChartComponent } from './components/coin-chart/coin-chart';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full',
+  },
+  {
     path: 'auth',
     component: AuthLayout,
     children: [
@@ -19,19 +24,22 @@ export const routes: Routes = [
       { path: 'login', component: Login },
       { path: 'signup', component: Signup },
       { path: 'forgot-password', component: ForgotPassword },
-      { path: 'reset-password/:token', component: ResetPassword },
+      { path: 'reset-password', component: ResetPassword }, // ✅ FIXED: Removed :token
       { path: 'verify-email', component: EmailVerification },
       { path: 'verify-2fa', component: EmailVerification },
     ],
   },
   {
-    path: '',
+    path: 'home',
     component: MainLayout,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: Home },
+      { path: '', component: Home },
       { path: 'chart/:id', component: CoinChartComponent },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/login',
   },
 ];

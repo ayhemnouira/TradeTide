@@ -1,0 +1,20 @@
+[0;1;32m●[0m mysqld.service - MySQL Server
+     Loaded: loaded (]8;;file://fedora/usr/lib/systemd/system/mysqld.service\/usr/lib/systemd/system/mysqld.service]8;;\; [0;1;32menabled[0m; preset: [0;1;38:5:185mdisabled[0m)
+    Drop-In: /usr/lib/systemd/system/service.d
+             └─]8;;file://fedora/usr/lib/systemd/system/service.d/10-timeout-abort.conf\10-timeout-abort.conf]8;;\
+     Active: [0;1;32mactive (running)[0m since Sun 2025-08-24 00:19:32 CET; 6min ago
+ Invocation: f5fa49cd72f34706af82324364baf366
+       Docs: ]8;;man:mysqld(8)\man:mysqld(8)]8;;\
+             ]8;;http://dev.mysql.com/doc/refman/en/using-systemd.html\http://dev.mysql.com/doc/refman/en/using-systemd.html]8;;\
+    Process: 1728 ExecStartPre=/usr/bin/mysqld_pre_systemd (code=exited, status=0/SUCCESS)
+   Main PID: 2410 (mysqld)
+     Status: "[0;1;36mServer is operational[0m"
+      Tasks: 43[0;38;5;245m (limit: 18528)[0m
+     Memory: 548.5M (peak: 559.3M)
+        CPU: 3.083s
+     CGroup: /system.slice/mysqld.service
+             └─[0;38;5;245m2410 /usr/bin/mysqld[0m
+
+Aug 24 00:19:31 fedora systemd[1]: Starting mysqld.service - MySQL Server...
+Aug 24 00:19:31 fedora (mysqld)[2410]: [0;1;38:5:185m[0;1;39m[0;1;38:5:185mmysqld.service: Referenced but unset environment variable evaluates to an empty string: MYSQLD_OPTS[0m
+Aug 24 00:19:32 fedora systemd[1]: Started mysqld.service - MySQL Server.

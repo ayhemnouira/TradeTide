@@ -39,14 +39,19 @@ export class ResetPassword {
   isLoading = false;
   error: string | null = null;
   message: string | null = null;
-  id: string;
+  id: string = '';
 
   constructor(
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.id = this.route.snapshot.queryParams['id'] || '';
+    // ✅ FIX: Read from queryParams, not params
+    this.route.queryParams.subscribe((params) => {
+      this.id = params['id'] || '';
+      console.log('🔑 Reset password session ID:', this.id);
+    });
+
     this.authStore.isLoading$.subscribe(
       (loading) => (this.isLoading = loading)
     );
@@ -59,9 +64,18 @@ export class ResetPassword {
       this.error = 'Passwords do not match';
       return;
     }
+
+    if (!this.id) {
+      this.error = 'Invalid reset session. Please try again.';
+      return;
+    }
+
     try {
+      console.log('🔄 Resetting password with session ID:', this.id);
       await this.authStore.resetPassword(this.id, this.password);
-      setTimeout(() => this.router.navigate(['/login']), 2000);
-    } catch {}
+      setTimeout(() => this.router.navigate(['/auth/login']), 2000);
+    } catch (error) {
+      console.error('Reset password error:', error);
+    }
   }
 }

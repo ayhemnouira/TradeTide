@@ -18,7 +18,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -35,17 +40,27 @@ public class SecurityConfig {
 
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/two-factor/otp/**", "/auth/users/reset-password/**", "/auth/google",
-                                "/oauth2/authorization/google", "/login/oauth2/code/google","/coins/**").permitAll()
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/two-factor/otp/**",
+                                "/auth/users/reset-password/**",  // This should cover all reset endpoints
+                                "/auth/google",
+                                "/oauth2/authorization/google",
+                                "/login/oauth2/code/google",
+                                "/coins/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
                         .successHandler(oAuth2LoginSuccessHandler)
+                        .loginPage("/oauth-login")  // Use different path to avoid conflict
                 )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -54,30 +69,33 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-    private CorsConfigurationSource corsConfigurationSource() {
-        return null;
+        // Allow your Angular frontend
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+
+        // Allow all HTTP methods
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // Allow all headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        // Allow credentials (cookies, authorization headers)
+        configuration.setAllowCredentials(true);
+
+        // Expose headers to the client
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+
+        // How long the response from a pre-flight request can be cached
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        UserDetails user1 = User
-//                .withDefaultPasswordEncoder()
-//                .username("kiran")
-//                .password("k@123")
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails user2 = User
-//                .withDefaultPasswordEncoder()
-//                .username("harsh")
-//                .password("h@123")
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1, user2);
-//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -90,8 +108,5 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-
     }
-
-
 }

@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../components/header-component/header-compon
 
 @Component({
   selector: 'app-main-layout',
+  standalone: true,
   imports: [SidebarComponent, RouterOutlet, HeaderComponent],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',

@@ -50,6 +50,7 @@ interface CoinResponse {
 @Component({
   selector: 'app-home',
   imports: [CommonModule, FormsModule],
+  standalone: true,
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -211,8 +212,13 @@ export class Home implements OnInit {
   }
 
   viewCoinChart(coinId: string, coinName: string): void {
-    this.router.navigate(['/chart', coinId], {
-      queryParams: { name: coinName },
-    });
-  }
+  console.log('Navigating to:', coinId, coinName);
+  this.router.navigate(['/home/chart', coinId], {
+    queryParams: { name: coinName },
+  }).then(success => {
+    console.log('Navigation success:', success);
+  }).catch(error => {
+    console.error('Navigation error:', error);
+  });
+}
 }
