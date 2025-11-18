@@ -178,20 +178,48 @@ TradeTide is a **full-stack cryptocurrency trading platform** that provides real
 
 ```bash
 # Clone the repository
-git clone https://github.com/ayhemnouira/TradeTide.git
+git clone https://github.com/yourusername/tradetide.git
 cd tradetide/backend
 
-# Configure application.properties
-# Update the following in src/main/resources/application.properties:
-# spring.data.mongodb.uri=mongodb://localhost:27017/tradetide
-# spring.mail.username=your-email@gmail.com
-# spring.mail.password=your-app-specific-password
-# jwt.secret=your-secret-key
+# Create application.properties from example
+cp src/main/resources/application.properties.example src/main/resources/application.properties
 
-# Build the project
+# Edit application.properties and configure:
+# 1. Database credentials (MySQL)
+# 2. Gmail SMTP credentials
+# 3. Google OAuth2 credentials (if using social login)
+```
+
+**Required Configuration:**
+
+1. **Database Setup (MySQL)**
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/TradeTideDB?createDatabaseIfNotExist=true&serverTimezone=UTC
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
+
+2. **Email Configuration (Gmail)**
+   - Enable 2-Step Verification in your Google Account
+   - Generate App Password: [Google Account → Security → App passwords](https://myaccount.google.com/apppasswords)
+   ```properties
+   spring.mail.username=your-email@gmail.com
+   spring.mail.password=your-16-digit-app-password
+   ```
+
+3. **Google OAuth2 (Optional)**
+   - Create project at [Google Cloud Console](https://console.cloud.google.com/)
+   - Enable Google+ API
+   - Create OAuth 2.0 credentials
+   - Add redirect URI: `http://localhost:8080/login/oauth2/code/google`
+   ```properties
+   spring.security.oauth2.client.registration.google.client-id=your-client-id
+   spring.security.oauth2.client.registration.google.client-secret=your-client-secret
+   ```
+
+```bash
+# Build and run
 mvn clean install
-
-# Run the application
 mvn spring-boot:run
 ```
 
