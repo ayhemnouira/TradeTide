@@ -361,6 +361,60 @@ Authorization: Bearer {jwt_token}
 
 ---
 
+## 📸 Screenshots
+
+### Authentication & Security
+
+<div align="center">
+
+#### Login Screen
+![Login Screen](screenshots/login.png)
+*Secure login with JWT authentication and Google Sign-In option*
+
+#### Registration with Password Strength
+![Registration](screenshots/signup.png)
+*Real-time password strength validation*
+
+#### Email Verification
+![Email Verification](screenshots/email-verification.png)
+*OTP-based email verification with 6-digit code*
+
+#### Professional Email Template
+![Email Template](screenshots/email-template.png)
+*Branded email verification system*
+
+</div>
+
+### Trading Dashboard
+
+<div align="center">
+
+#### Market Overview
+![Dashboard](screenshots/dashboard.png)
+*Real-time cryptocurrency prices with search functionality*
+
+#### Interactive Price Charts
+![Price Chart](screenshots/price-chart.png)
+*7-day price history with multiple timeframe options*
+
+#### Coin Details
+![Coin List](screenshots/coin-list.png)
+*Comprehensive market data including 24h changes and volume*
+
+</div>
+
+### Password Management
+
+<div align="center">
+
+#### Forgot Password Flow
+![Forgot Password](screenshots/forgot-password.png)
+*Secure password reset with email verification*
+
+</div>
+
+---
+
 ## 🔐 Security Features
 
 ### Authentication & Authorization
