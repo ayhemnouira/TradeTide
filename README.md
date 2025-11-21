@@ -1,4 +1,4 @@
-# 🚀 ![TradeTide Banner](https://github.com/user-attachments/assets/653b243e-a1a5-4cfd-bd7a-c8e62a5700f1)TradeTide - Real-Time Cryptocurrency Trading Platform
+# 🚀TradeTide - Real-Time Cryptocurrency Trading Platform
 
 <div align="center">
 
