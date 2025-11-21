@@ -31,6 +31,21 @@ TradeTide is a **full-stack cryptocurrency trading platform** that provides real
 
 ---
 
+## 🎥 Demo
+
+### Full Application Walkthrough
+
+https://github.com/user-attachments/assets/your-video-file.mp4
+
+**Features Demonstrated:**
+- 🔐 Complete authentication flow (Sign up, Login, Email verification)
+- 📊 Real-time cryptocurrency market data
+- 📈 Interactive price charts with multiple timeframes
+- 🔍 Search and filter functionality
+- ✉️ Password reset and 2FA system
+
+---
+
 ## ✨ Features
 
 ### 🔐 Authentication & Security
