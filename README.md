@@ -1,8 +1,8 @@
-# 🚀 TradeTide - Real-Time Cryptocurrency Trading Platform
+# 🚀 TradeTide - Real-Time Cryptocurrency Trading Platform![TradeTide Banner](https://github.com/user-attachments/assets/653b243e-a1a5-4cfd-bd7a-c8e62a5700f1)
 
 <div align="center">
 
-![TradeTide Banner](https://github.com/user-attachments/assets/653b243e-a1a5-4cfd-bd7a-c8e62a5700f1)
+
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Angular](https://img.shields.io/badge/Angular-20.x-red.svg)](https://angular.io/)
 [![JWT](https://img.shields.io/badge/JWT-Authentication-orange.svg)](https://jwt.io/)
