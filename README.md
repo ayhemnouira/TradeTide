@@ -134,7 +134,7 @@ https://github.com/user-attachments/assets/573352f0-ccd4-4feb-86bd-2d3ed45782e3
 ┌─────────────────────────────────────────────────────────────┐
 │                    External Services                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   MongoDB    │  │  CoinGecko   │  │  JavaMail    │      │
+│  │    MySQL     │  │  CoinGecko   │  │  JavaMail    │      │
 │  │   Database   │  │     API      │  │   (SMTP)     │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
@@ -158,7 +158,7 @@ https://github.com/user-attachments/assets/573352f0-ccd4-4feb-86bd-2d3ed45782e3
 | ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring&logoColor=white) | Framework | 3.x |
 | ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=spring-security&logoColor=white) | Authentication | 6.x |
 | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white) | Token Auth | 0.11.x |
-| ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) | Database | 6.x |
+| ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white) | Database | 8.x |
 | ![JavaMail](https://img.shields.io/badge/JavaMail-ED8B00?style=flat&logo=oracle&logoColor=white) | Email Service | Latest |
 
 ### Frontend
@@ -187,7 +187,7 @@ https://github.com/user-attachments/assets/573352f0-ccd4-4feb-86bd-2d3ed45782e3
 ```bash
 - Java 17 or higher
 - Node.js 18+ and npm
-- MongoDB 6.x
+- MySQL 8.x
 - Maven 3.8+
 - Angular CLI 20+
 ```
@@ -196,7 +196,7 @@ https://github.com/user-attachments/assets/573352f0-ccd4-4feb-86bd-2d3ed45782e3
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/tradetide.git
+git clone https://github.com/ayhemnouira/tradetide.git
 cd tradetide/backend
 
 # Create application.properties from example
@@ -215,6 +215,8 @@ cp src/main/resources/application.properties.example src/main/resources/applicat
    spring.datasource.url=jdbc:mysql://localhost:3306/TradeTideDB?createDatabaseIfNotExist=true&serverTimezone=UTC
    spring.datasource.username=your_username
    spring.datasource.password=your_password
+   spring.jpa.hibernate.ddl-auto=update
+   spring.jpa.show-sql=true
    ```
 
 2. **Email Configuration (Gmail)**
@@ -490,7 +492,7 @@ tradetide/
 │   │   │   │   ├── controller/        # REST Controllers
 │   │   │   │   ├── domain/            # Domain Models
 │   │   │   │   ├── model/             # Entity Models
-│   │   │   │   ├── repo/              # MongoDB Repositories
+│   │   │   │   ├── repo/              # MySQL Repositories
 │   │   │   │   ├── request/           # Request DTOs
 │   │   │   │   ├── response/          # Response DTOs
 │   │   │   │   ├── service/           # Business Logic
