@@ -65,9 +65,20 @@ export class Login {
     this.password = '';
     this.error = null;
     this.successMessage = null;
+    
     this.route.queryParams.subscribe((params) => {
       const token = params['token'];
       const twoFactorId = params['id'];
+      const error = params['error'];
+      
+      // Handle OAuth errors
+      if (error === 'account_exists_with_password') {
+        this.error = 'This email is already registered with a password. Please login with your password instead.';
+      } else if (error === 'email_failed') {
+        this.error = 'Failed to send verification email. Please try again.';
+      }
+      
+      // Handle successful OAuth login
       if (token) {
         localStorage.setItem('jwt', token);
         this.router.navigate(['/home']);

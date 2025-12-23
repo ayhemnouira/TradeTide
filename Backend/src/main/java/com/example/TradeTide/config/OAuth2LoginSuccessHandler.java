@@ -37,16 +37,37 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         String email = oauthToken.getPrincipal().getAttribute("email");
+        String name = oauthToken.getPrincipal().getAttribute("name");
+        String googleId = oauthToken.getPrincipal().getAttribute("sub"); // Google user ID
 
         User user = userRepo.findByEmail(email);
+
         if (user == null) {
+            // New user - create account with GOOGLE provider
             user = new User();
             user.setEmail(email);
-            user.setUsername(email);
-            user.setProvider("GOOGLE");
+            user.setUsername(name != null ? name : email);
+            user.getProviders().add("GOOGLE"); // Add to Set
+            user.setGoogleId(googleId);
             userRepo.save(user);
+        } else {
+            // Existing user found
+            if (user.getProviders().contains("LOCAL") && !user.getProviders().contains("GOOGLE")) {
+                // Account exists with password only - prevent OAuth login
+                String redirectUrl = "http://localhost:4200/login?error=account_exists_with_password";
+                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+                return;
+            }
+
+            // If user doesn't have GOOGLE provider yet, add it (account linking)
+            if (!user.getProviders().contains("GOOGLE")) {
+                user.getProviders().add("GOOGLE");
+                user.setGoogleId(googleId);
+                userRepo.save(user);
+            }
         }
 
+        // Continue with 2FA or normal login flow
         if (user.getTwoFactorAuth().isEnabled()) {
             String jwt = jwtService.generateToken(user.getUsername());
             String otp = OtpUtils.generateOtp();
@@ -58,7 +79,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             try {
                 emailService.sendVerificationEmail(user.getEmail(), otp);
             } catch (MessagingException e) {
-                // Log the error and redirect to an error page or handle gracefully
                 logger.error("Failed to send 2FA email: ", e);
                 String redirectUrl = "http://localhost:4200/login?error=email_failed";
                 getRedirectStrategy().sendRedirect(request, response, redirectUrl);
