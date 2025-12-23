@@ -45,6 +45,7 @@ export class Signup {
   name = '';
   email = '';
   password = '';
+  confirmPassword = '';
   isLoading = false;
   error: string | null = null;
   successMessage: string | null = null;
@@ -58,6 +59,7 @@ export class Signup {
       (message) => (this.successMessage = message)
     );
   }
+  
   ngOnInit() {
     this.successMessage = null;
   }
@@ -65,8 +67,10 @@ export class Signup {
   async handleSignUp() {
     try {
       await this.authStore.signup(this.email, this.password, this.name);
+      this.router.navigate(['/auth/login']);
     } catch {}
   }
+  
   passwordStrength(password: string): number {
     if (!password) return 0;
     let strength = 0;
@@ -80,5 +84,9 @@ export class Signup {
 
   get passwordStrengthValue(): number {
     return this.passwordStrength(this.password);
+  }
+
+  get passwordsMatch(): boolean {
+    return this.password === this.confirmPassword;
   }
 }

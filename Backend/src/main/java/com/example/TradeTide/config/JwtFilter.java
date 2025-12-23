@@ -27,8 +27,27 @@ public class JwtFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+          HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
+
+    // Get the request path
+    String path = request.getRequestURI();
+
+    // Skip JWT validation for public endpoints
+    if (path.startsWith("/coins") ||
+            path.equals("/login") ||
+            path.equals("/register") ||
+            path.startsWith("/two-factor/otp") ||
+            path.startsWith("/auth/users/reset-password") ||
+            path.startsWith("/auth/google") ||
+            path.startsWith("/oauth2/authorization/google") ||
+            path.startsWith("/login/oauth2/code/google")) {
+
+      filterChain.doFilter(request, response);
+      return;  // Exit early, don't process JWT
+    }
+
+    // Existing JWT logic for protected endpoints
     String authHeader = request.getHeader("Authorization");
     String token = null;
     String email = null;
@@ -40,11 +59,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       UserDetails userDetails =
-          context.getBean(MyUserDetailsService.class).loadUserByUsername(email);
+              context.getBean(MyUserDetailsService.class).loadUserByUsername(email);
       if (jwtService.validateToken(token, userDetails)) {
         UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
       }

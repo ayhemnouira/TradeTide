@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;  // ← ADD THIS
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,8 +27,9 @@ public class CoinServiceImpl implements CoinService{
     private ObjectMapper objectMapper ;
     @Autowired
     private RestTemplate restTemplate;
-    @Override
 
+    @Override
+    @Cacheable(value = "coinList", key = "#page")  // ← ADD THIS
     public List<Coin> getCoinList(int page) throws Exception {
         String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=" + page + "&sparkline=false";
         try {
@@ -41,6 +43,7 @@ public class CoinServiceImpl implements CoinService{
     }
 
     @Override
+    @Cacheable(value = "marketChart", key = "#coinId + '_' + #days")  // ← ADD THIS
     public String getMarketChart(String coinId, int days) throws Exception {
         String url = "https://api.coingecko.com/api/v3/coins/"+coinId+"/market_chart?vs_currency=usd&days="+days;
         RestTemplate restTemplate = new RestTemplate();
@@ -57,6 +60,7 @@ public class CoinServiceImpl implements CoinService{
     }
 
     @Override
+    @Cacheable(value = "coinDetails", key = "#coinId")  // ← ADD THIS
     public String getCoinDetails(String coinId) throws Exception {
         String url = "https://api.coingecko.com/api/v3/coins/"+coinId;
         RestTemplate restTemplate = new RestTemplate();
@@ -99,6 +103,7 @@ public class CoinServiceImpl implements CoinService{
     }
 
     @Override
+    @Cacheable(value = "searchCoin", key = "#keyword")  // ← ADD THIS
     public String searchCoin(String keyword) throws Exception {
         String url = "https://api.coingecko.com/api/v3/search?query="+keyword;
         RestTemplate restTemplate = new RestTemplate();
@@ -115,6 +120,7 @@ public class CoinServiceImpl implements CoinService{
     }
 
     @Override
+    @Cacheable(value = "top50Coins")  // ← ADD THIS
     public String getTop50CoinsByMarketCapRank() throws Exception {
         String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=50&page=1";
         RestTemplate restTemplate = new RestTemplate();
@@ -131,6 +137,7 @@ public class CoinServiceImpl implements CoinService{
     }
 
     @Override
+    @Cacheable(value = "trendingCoins")  // ← ADD THIS
     public String getTrendingCoins() throws Exception {
         String url = "https://api.coingecko.com/api/v3/search/trending";
         RestTemplate restTemplate = new RestTemplate();

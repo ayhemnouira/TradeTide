@@ -21,9 +21,10 @@ public class CoinController {
     private ObjectMapper objectMapper ;
 
     @GetMapping
-    ResponseEntity<List<Coin>> getCoinList(@RequestParam(required = false,name="page") int page) throws Exception {
-        List<Coin> coins = coinService.getCoinList(page);
-        return new ResponseEntity<>(coins, HttpStatus.ACCEPTED);
+    ResponseEntity<List<Coin>> getCoinList(@RequestParam(required = false, name="page") Integer page) throws Exception {
+        int pageNumber = (page != null) ? page : 1;  // default to 1 if null
+        List<Coin> coins = coinService.getCoinList(pageNumber);
+        return new ResponseEntity<>(coins, HttpStatus.OK);
     }
     @GetMapping("/{coinId}/chart")
     ResponseEntity<JsonNode> getMarketChart(@PathVariable String coinId, @RequestParam("days") int days) throws Exception {
