@@ -568,7 +568,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Ayhem Nouira**
 
 - 📍 Location: Monastir, Tunisia
-- 📧 Email: ayhemnouira9@gmail.com
 - 💼 LinkedIn: [Ayhem Nouira](https://linkedin.com/in/ayhem-nouira)
 - 🐙 GitHub: [@ayhemnouira](https://github.com/ayhemnouira)
 
